@@ -6,3 +6,26 @@
 .env
 .env.*
 !.env.example
+
+# Node.js dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+*.local
+
+# Local data and evidence (SQLite, screenshots, JSON store)
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
