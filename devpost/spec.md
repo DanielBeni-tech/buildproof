@@ -1,6 +1,6 @@
 ---
 doc: spec
-status: draft
+status: approved
 ---
 
 # BuildProof — Technical Specification
@@ -29,31 +29,34 @@ Si le pas 6 est interrompu par un délai, la ligne montre `timeout` et `needs re
 
 ## Stack
 
-Candidat à proposer pour décision de l'apprenant (non encore approuvé) :
+Stack confirmée par l'apprenant :
 
 - Frontend : React + Vite, TypeScript, composants HTML/CSS/SVG maison.
 - Backend : petit service HTTP Node.js/TypeScript avec dépôt local.
-- Persistence : SQLite (préférée, via `better-sqlite3`) ou stockage JSON avec écritures atomiques — stratégie à valider selon l'environnement ; les captures d'écran sont stockées séparément des données structurées.
+- Validation : Zod pour la validation des schémas d'actions et des données générées.
+- Persistance : SQLite (via `better-sqlite3`) si l'installation est fiable dans cet environnement, sinon stockage JSON avec écritures atomiques ; les captures d'écran sont stockées séparément des données structurées.
 - Exécution : Playwright, parce qu'il apporte navigation, sélecteurs, captures et journaux avec un seul cadre.
 - Tests : Vitest pour l'unité et Playwright pour les parcours de spécification.
 
 Raison : tout tient en local, sans clé ni quota, ce qui protège la démonstration. Le compromis : ajout d'un service local au lieu d'une page seulement statique, nécessaire pour interdire les faux chemins d'exécution.
 
-Non vérifié : versions, installation des binaires et images de navigateur Playwright dans l'environnement de build — défaut à prévoir si l'installation ne fonctionne pas proprement.
+Non vérifié : installation des binaires et images de navigateur Playwright, et de SQLite/better-sqlite3, dans l'environnement de build — défaut à prévoir si l'une de ces installations ne fonctionne pas proprement.
 
-Documentation à poser après acceptation : liens React/Vite, Node.js, Playwright, Vitest, SQLite/better-sqlite3.
+Documentation à poser après acceptation : liens React/Vite, Node.js, Playwright, Zod, Vitest, SQLite/better-sqlite3.
 
 ## Where It Runs and How Someone Tries It
 
 Runtime : application locale et navigateur local, sans clé d'API et sans service externe pendant l'enregistrement. Toute clé d'IA nécessaire reste côté backend et n'est jamais exposée au frontend.
 
-Commande exacte à définir après l'accord du stack et de la persistence. Plan de vérification : démarrer le service puis le frontend, ouvrir l'URL locale, dérouler les trois exigences de la démonstration sur l'application cible locale ; les captures de preuve s'ouvrent depuis le rapport.
+Commande exacte à définir après l'accord du stack et de la persistence. Plan de vérification : démarrer le service puis le frontend, ouvrir l'URL locale, dérouler les trois exigences de la démonstration sur l'application d'inscription locale cible ; les captures de preuve s'ouvrent depuis le rapport.
+
+URL exacte de l'application d'inscription locale — à confirmer avant le build.
 
 Submission exige deux livrables : une vidéo de démo courte et un dépôt GitHub public. Le déploiement est facultatif et ne remplace aucun des deux. Les contraintes exactes de durée de vidéo dépendent du formulaire de soumission Devpost actuel et n'ont pas été vérifiées localement.
 
 ## Look and Feel
 
-Repris de `prd.md > Look and Feel` : direction provisoire (instrument de vérification, densité terminal, base claire ou sombre selon préférence, accents réservés aux statuts, zéro animation de victoire prématurée, libellé indiquant d'où vient le contenu proposé). À confirmer par l'apprenant.
+Repris de `prd.md > Look and Feel` : direction visuelle confirmée — **Developer Tool Dark**. Surfaces navy foncées, accents bleus, typographie claire, tableaux denses mais lisibles, prévisualisations de preuves spacieuses, couleurs de statut sobres, zéro animation décorative, libellé indiquant d'où vient le contenu proposé.
 
 Si leur stack limite la typographie ou la densité, cette limite est explicitement reportée ici.
 
@@ -70,11 +73,15 @@ Route `Scénarios`. Met en attente, présente, édite et refuse aux candidats l'
 PRD ref: `prd.md > Scenario suggestion and approval`.
 
 Intégration IA :
-- Le fournisseur d'IA est une décision ouverte (pas de présomption sur le prestataire).
+- Le fournisseur d'IA est une décision ouverte, non encore choisie (pas de présomption sur le prestataire).
+- L'IA est appelée exclusivement derrière une interface serveur ; aucun appel IA n'est effectué depuis le navigateur de l'utilisateur.
+- Aucun crédit Cline gratuit n'est présumé utilisable par l'application.
+- OmniRoute n'est pas requis pour le fonctionnement de l'application.
 - L'IA reçoit l'énoncé de l'exigence et retourne une sortie structurée conforme au schéma d'actions contrainte : `navigate`, `fill`, `click`, `assertVisible`, `assertText`, `assertUrl`, avec paramètres typés.
 - L'IA ne génère jamais de JavaScript exécutable ni d'arbitraire code pour le test runner.
-- Chaque action et paramètre est validé côté serveur avant exécution (URL dans l'allowlist de l'origine cible, sélecteurs sûrs uniquement).
-- En cas d'indisponibilité de l'IA, le système affiche un état d'erreur et permet la saisie manuelle des étapes ; il ne simule jamais une génération IA.
+- Chaque action et paramètre est validé côté serveur avant exécution (URL dans l'allowlist de l'origine cible, sélecteurs sûrs uniquement), en utilisant Zod pour la validation de schéma.
+- En cas d'indisponibilité de l'IA, le système affiche un état d'erreur honnête et permet la saisie manuelle des étapes ; il ne simule jamais une génération IA.
+- La génération de scénarios et l'exécution de tests navigateur sont des opérations distinctes ; un run de test ne dépend pas d'une requête IA.
 - Frontière : le contenu généré reste un brouillon (`draft`) jusqu'à approbation humaine explicite ; il ne peut pas produire un état d'exécution ni un résultat.
 
 ### Approval Workflow
@@ -180,10 +187,16 @@ Impossible d'exiger des clés utilisateur dans l'ACP.
 
 ## Decisions and Open Issues
 
-- **Choix de l'apprenant : stack** — non approuvé ; candidat posé ci-dessus avec raison et compromis, à accepter ou changer.
-- **Choix de l'apprenant : persistence** — recommandation SQLite, à valider selon l'environnement et la complexité d'implémentation.
-- **Choix de l'apprenant : direction Look and Feel** — provisoire, reprise de `prd.md > Look and Feel`, à confirmer.
-- **Choix de l'apprenant : cible de démonstration et URL autorisée** — à fixer avant le build.
-- **Choix de l'apprenant : fournisseur d'IA et comportement en cas d'indisponibilité** — à préciser ; aucune clé côté frontend.
+- **Choix de l'apprenant : stack** — confirmé (React + Vite, TypeScript, Node.js, Playwright, Zod, Vitest, SQLite via better-sqlite3 si fiable, sinon JSON).
+- **Choix de l'apprenant : persistence** — SQLite recommandée, à valider selon l'environnement ; fallback JSON avec écritures sécurisées.
+- **Choix de l'apprenant : direction Look and Feel** — confirmé, Developer Tool Dark.
+- **Choix de l'apprenant : cible de démonstration** — application d'inscription locale, URL exacte à confirmer avant le build.
+- **Choix de l'apprenant : fournisseur d'IA** — non encore choisi ; aucune clé côté frontend ; aucun crédit Cline présumé ; OmniRoute non requis.
 - **Inconnu utile : exécution navigateur en local** — l'environnement, les versions et l'accès aux images n'ont jamais été vérifiés. Dès le début du build : installer Playwright, charger la fixture, lancer un parcours qui laisse URL, capture et journaux, et noter ce qui est prêt ou bloqué.
 - Questions reportées de `prd.md > Open Questions` : plusieurs projets éditables peuvent attendre après le MVP.
+
+
+
+Looks good. I approve devpost/spec.md.
+The three planning documents are approved.
+Proceed to the Skill Pack's 5-build step.

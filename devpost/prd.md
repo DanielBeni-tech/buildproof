@@ -1,6 +1,6 @@
 ---
 doc: prd
-status: draft
+status: approved
 ---
 
 # BuildProof — Product Requirements
@@ -11,8 +11,11 @@ Source : `scope.md > The Unique Kernel`, `scope.md > The Core Loop`, `scope.md >
 
 ## The Core Journey
 
-1. L'utilisateur ouvre le projet lié à une application web existante.
-2. Il saisit, corrige ou archive une exigence produit (identifiant, énoncé, priorité, note d'acceptation).
+1. L'utilisateur ouvre le projet lié à une application web d'inscription (signup) locale.
+2. Il saisit, corrige ou archive une exigence produit (identifiant, énoncé, priorité, note d'acceptation). Trois exigences de démonstration sont ciblées :
+   - `REQ-01` — une inscription valide est acceptée.
+   - `REQ-02` — une inscription avec un email invalide est rejetée.
+   - `REQ-03` — une inscription avec un mot de passe trop court est rejetée.
 3. Il demande des scénarios de vérification pour une exigence sélectionnée ; l'IA génère des candidats dont chaque étape respecte un schéma d'actions contrainte.
 4. Il ouvre chaque candidat, en modifie les étapes si nécessaire, puis l'approuve ou le supprime explicitement. Aucun scénario non approuvé ne peut être exécuté.
 5. Il lance un scénario approuvé en automatique. L'exécution passe par `queued`, puis `running`, et se termine par `succeeded`, `failed`, `blocked` ou `timeout`.
@@ -34,9 +37,9 @@ Aucune vue n'est créée pour remplir la grille.
 
 ## Look and Feel
 
-Direction non établie lors de l'entretien initial. Direction provisoire enregistrée : instrument de vérification pour développeurs, typographie claire et hiérarchisée, couleurs réservées aux statuts, densité utile, zéro animation décorative, libellé indiquant l'origine du contenu généré par l'IA.
+Direction visuelle confirmée : **Developer Tool Dark**. Surfaces navy foncées, accents bleus, typographie claire et hiérarchisée, couleurs réservées aux statuts, tableaux denses mais lisibles, prévisualisations de preuves spacieuses, zéro animation décorative, libellé indiquant l'origine du contenu généré par l'IA. Aucune animation de type "hacker" néon.
 
-Cette direction est provisoire ; elle doit être confirmée par l'apprenant avant le build et ne bloque pas le reste du plan.
+Cette direction est enregistrée et ne bloque pas le reste du plan.
 
 ## Features and Behavior
 
@@ -50,7 +53,7 @@ Cette direction est provisoire ; elle doit être confirmée par l'apprenant avan
 
 - FR-2.1 Ajouter, modifier, archiver et lister une exigence.
 - FR-2.2 Attribuer identifiant, énoncé, priorité et note d'acceptation.
-- FR-2.3 Bloquer un énoncé vide ; le nombre d'exigences actives reste limité à un petit ensemble (environ trois pour la démonstration ; pas de quota arbitraire).
+- FR-2.3 Bloquer un énoncé vide ; trois exigences de démonstration sont ciblées (`REQ-01`, `REQ-02`, `REQ-03`) ; pas de quota arbitraire au-delà.
 - AC-2.1 Un écran non vide exige un enregistrement complet.
 
 ### Scenario suggestion and approval
@@ -124,8 +127,8 @@ Toute hypothèse restante est signalée comme hypothèse avant approbation.
 
 ## What We're Building
 
-- Projet local avec URL cible et persistance démarrage-partout.
-- Enregistrement d'un petit ensemble d'exigences (environ trois pour la démonstration).
+- Projet local avec URL cible d'application d'inscription (signup) et persistance démarrage-partout.
+- Enregistrement de trois exigences de démonstration (`REQ-01`, `REQ-02`, `REQ-03`).
 - Génération verrouillée de brouillons par l'IA, édition des étapes et approbation explicite.
 - Versioning immuable des scénarios approuvés.
 - Exécution automatisée bornée sur une application web avec progression et états terminaux.
@@ -155,8 +158,15 @@ Toute hypothèse restante est signalée comme hypothèse avant approbation.
 
 ## Open Questions
 
-- Environnement navigateur fiable pour l'exécution locale (Playwright) — à vérifier en début de build.
-- Fournisseur d'IA et comportement en cas d'indisponibilité — à préciser avant le build.
-- Stratégie de persistence : SQLite ou JSON — à valider selon l'environnement.
-- Application cible de démonstration et URL autorisée — à fixer avant le build.
+- Fournisseur d'IA pour la génération de scénarios — non encore choisi ; l'IA reste derrière une interface serveur, aucune clé API n'est exposée au frontend, et aucun crédit Cline gratuit n'est présumé utilisable par l'application.
+- OmniRoute n'est pas requis pour le fonctionnement de l'application.
+- Fiabilité de l'installation de SQLite dans cet environnement — à vérifier en début de build ; fallback sur stockage JSON avec écritures sécurisées si nécessaire.
+- Fiabilité de l'installation des binaires et images de navigateur Playwright dans cet environnement — à vérifier en début de build.
+- URL exacte de l'application d'inscription locale — à confirmer avant le build.
 - Plusieurs projets éditables — peut attendre après le MVP.
+
+
+
+
+Looks good. I approve devpost/prd.md.
+Proceed with the next required planning approval step.

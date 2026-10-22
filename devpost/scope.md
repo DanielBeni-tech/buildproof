@@ -1,6 +1,6 @@
 ---
 doc: scope
-status: draft
+status: approved
 ---
 
 # BuildProof
@@ -33,9 +33,9 @@ Cette boucle se répète tant qu'une exigence reste sans preuve convaincante.
 
 ## Inspiration & Identity
 
-La direction visuelle n'a pas encore été établie par l'apprenant. À ce stade, l'application doit avoir l'air d'un instrument de vérification pour développeurs : sobre, dense quand il faut lire des critères et des journaux, immédiatement lisible quand un statut change.
+Direction visuelle confirmée : **Developer Tool Dark**. Surfaces navy foncées, accents bleus, typographie claire et lisible, tableaux denses mais aérés, prévisualisations de preuves spacieuses, couleurs de statut sobres et significatives, animations fonctionnelles minimales, aucun effet décoratif de type "hacker" néon. L'application doit avoir l'air d'un instrument de vérification professionnel pour développeurs.
 
-Cette direction est enregistrée comme provisoire dans `prd.md > Look and Feel` et `spec.md > Look and Feel` ; elle doit être confirmée (ou ajustée) par l'apprenant avant le build. Elle ne bloque pas le reste du plan.
+Cette direction est enregistrée dans `prd.md > Look and Feel` et `spec.md > Look and Feel`. Elle ne bloque pas le reste du plan.
 
 ## Why This Matters to the Learner
 
@@ -43,7 +43,13 @@ Priorité explicite : privilégier des résultats de test fiables et observables
 
 ## What "Working" Looks Like
 
-À partir d'une petite application web locale de démonstration et d'un projet contenant environ trois exigences, je génère des scénarios candidats, j'en approuve un petit nombre, je lance l'un des contrôles automatisés, puis j'ouvre le rapport. Le rapport affiche `pass` avec capture, `fail` avec diagnostic, et `not tested` avec une action de lancement. Chaque ligne `pass` ou `fail` ouvre sa preuve provenant de la même exécution.
+À partir d'une application web locale d'inscription (signup) et d'un projet contenant trois exigences :
+
+1. Une inscription valide est acceptée (`pass`).
+2. Une inscription avec un email invalide est rejetée (`fail`).
+3. Une inscription avec un mot de passe trop court est rejetée (`fail`).
+
+Je génère des scénarios candidats, j'en approuve un petit nombre, je lance l'un des contrôles automatisés, puis j'ouvre le rapport. Le rapport affiche `pass` avec capture, `fail` avec diagnostic, et `not tested` avec une action de lancement. Chaque ligne `pass` ou `fail` ouvre sa preuve provenant de la même exécution.
 
 Le moment probant est l'échec visible et traçable : un scénario cassé produit un diagnostic réel, jamais un succès fabriqué.
 
@@ -51,8 +57,11 @@ Le moment probant est l'échec visible et traçable : un scénario cassé produi
 
 Inclus dans le MVP :
 
-- Un seul projet local, lié à une URL d'application cible unique et contrôlée.
-- Un petit ensemble d'exigences (environ trois pour la démonstration), chacune avec identifiant, énoncé, priorité et note d'acceptation.
+- Un seul projet local, lié à une URL d'application cible unique et contrôlée : une application d'inscription (signup) locale.
+- Trois exigences pour la démonstration, chacune avec identifiant, énoncé, priorité et note d'acceptation :
+  1. `REQ-01` — une inscription valide est acceptée.
+  2. `REQ-02` — une inscription avec un email invalide est rejetée.
+  3. `REQ-03` — une inscription avec un mot de passe trop court est rejetée.
 - Création, édition et archivage d'exigences.
 - Génération de scénarios de vérification par l'IA, contrainte à un schéma d'actions défini (`navigate`, `fill`, `click`, `assertVisible`, `assertText`, `assertUrl`).
 - Édition humaine des scénarios et approbation obligatoire avant exécution.
@@ -62,7 +71,7 @@ Inclus dans le MVP :
 - Résultats réels uniquement : un succès ne peut être enregistré que si toutes les assertions ont réellement passé.
 - Capture de preuve par exécution (horodatage, URL cible, étapes, résultat, diagnostic, référence de capture si disponible).
 - Un rapport en lecture seule reliant exigence, scénario, dernier résultat et preuve.
-- Persistance fiable (côté serveur, fichier local) survivant au rechargement.
+- Persistance fiable (côté serveur, fichier local SQLite si l'installation est fiable, sinon JSON avec écritures sécurisées) survivant au rechargement.
 - États de chargement, vide, erreur et d'échec clairement affichés.
 - Une démonstration reproductible avant la date limite du 26 octobre 2026.
 
@@ -92,10 +101,12 @@ Ce qui ne peut pas être coupé : approuver un scénario avant exécution, repr�
 
 ## Open Questions
 
-- Choix de la stack technique (candidat : React + Vite, TypeScript, Node.js, Playwright, Vitest) — à convenir avec l'apprenant avant le build.
-- Cible exacte de l'application de démonstration et URL autorisée — à fixer avant le build.
-- Stratégie de persistence : SQLite (préférée) ou stockage JSON avec écritures sécurisées — à valider selon l'environnement.
-- Fournisseur d'IA pour la génération de scénarios et comportement en cas d'indisponibilité — à préciser ; aucune clé API ne sera exposée au frontend.
-- Direction visuelle finale — provisoire, à confirmer par l'apprenant.
+- Fournisseur d'IA pour la génération de scénarios — non encore choisi ; l'IA reste derrière une interface serveur, aucune clé API n'est exposée au frontend, et aucun crédit Cline gratuit n'est présumé utilisable par l'application.
+- OmniRoute n'est pas requis pour le fonctionnement de l'application.
+- Fiabilité de l'installation de SQLite dans cet environnement — à vérifier au début du build ; fallback sur stockage JSON avec écritures sécurisées si nécessaire.
+- Fiabilité de l'installation des binaires et images de navigateur Playwright dans cet environnement — à vérifier au début du build.
 
 Ce document est une proposition de travail révisée le 2026-10-22, enregistrée comme brouillon pour revue. Il n'est pas approuvé tant que l'apprenant n'a pas formulé un accord explicite sur le plan affiché.
+
+parfait. j'approve devpost/scope.md.
+Proceed with the next required planning approval step.
