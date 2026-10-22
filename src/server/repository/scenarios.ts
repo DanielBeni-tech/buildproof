@@ -45,18 +45,18 @@ export function saveScenarioVersion(
 }
 
 export function getScenarioVersion(scenarioId: string, versionNumber: number): ScenarioVersion | null {
-  const row = db.prepare(
+  const row: any = db.prepare(
     `SELECT * FROM scenario_versions WHERE scenario_id = ? AND version_number = ?`
   ).get(scenarioId, versionNumber);
   if (!row) return null;
   return {
-    id: row.id as string,
-    scenarioId: row.scenario_id as string,
-    versionNumber: row.version_number as number,
-    steps: JSON.parse(row.steps as string),
-    approvedAt: row.approved_at as string | null,
-    approvedBy: row.approved_by as string | null,
-    createdAt: row.created_at as string,
+    id: row.id,
+    scenarioId: row.scenario_id,
+    versionNumber: row.version_number,
+    steps: JSON.parse(row.steps),
+    approvedAt: row.approved_at,
+    approvedBy: row.approved_by,
+    createdAt: row.created_at,
   };
 }
 

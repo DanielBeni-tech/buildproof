@@ -15,7 +15,7 @@ export interface AIScenarioResponse {
 }
 
 export class AIService {
-  async generateScenario(request: AIScenarioRequest): Promise<AIScenarioResponse> {
+  async generateScenario(_request: AIScenarioRequest): Promise<AIScenarioResponse> {
     // Le fournisseur d'IA est une décision ouverte, non encore choisie.
     // Aucun appel IA n'est effectué depuis le frontend. L'IA reste derrière
     // cette interface serveur. Aucun crédit Cline gratuit n'est présumé.

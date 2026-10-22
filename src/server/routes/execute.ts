@@ -10,7 +10,7 @@ router.post('/runs/:id/execute', async (req, res) => {
   const runId = req.params.id;
   // Récupérer le run pour avoir le contexte
   const { db } = await import('../repository/index');
-  const row = db.prepare(`SELECT * FROM runs WHERE id = ?`).get(runId);
+  const row: any = db.prepare(`SELECT * FROM runs WHERE id = ?`).get(runId);
   if (!row) return res.status(404).json({ error: 'Run not found' });
 
   const version = getScenarioVersion(row.scenario_id as string, row.scenario_version as number);

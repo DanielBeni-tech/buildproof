@@ -8,7 +8,6 @@ export function createRun(data: {
   targetUrl: string;
 }): Run {
   const id = generateId();
-  const now = nowISO();
   db.prepare(
     `INSERT INTO runs (id, scenario_id, scenario_version, requirement_id, state, target_url)
      VALUES (?, ?, ?, ?, 'queued', ?)`
@@ -46,9 +45,9 @@ export function finalizeRun(
 
 export function createResult(data: {
   runId: string;
-  status: string;
+  status: 'pass' | 'fail' | 'blocked' | 'not tested' | 'needs review';
   summary: string | null;
-  diagnosticCode: string | null;
+  diagnosticCode: 'selector' | 'navigation' | 'timeout' | 'crash' | 'unknown' | null;
   executedSteps: ExecutedStep[];
 }): Result {
   const id = generateId();
@@ -67,15 +66,15 @@ export function createResult(data: {
 }
 
 export function getResult(runId: string): Result | null {
-  const row = db.prepare(`SELECT * FROM results WHERE run_id = ?`).get(runId);
+  const row: any = db.prepare(`SELECT * FROM results WHERE run_id = ?`).get(runId);
   if (!row) return null;
   return {
-    id: row.id as string,
-    runId: row.run_id as string,
-    status: row.status as string,
-    summary: row.summary as string | null,
-    diagnosticCode: row.diagnostic_code as string | null,
-    executedSteps: JSON.parse(row.executed_steps as string),
+    id: row.id,
+    runId: row.run_id,
+    status: row.status,
+    summary: row.summary,
+    diagnosticCode: row.diagnostic_code,
+    executedSteps: JSON.parse(row.executed_steps),
   };
 }
 

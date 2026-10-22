@@ -122,7 +122,7 @@ export class BrowserAdapter {
             }
             case 'assertText': {
               const text = await contextPage.textContent(step.selector!);
-              success = text?.includes(step.value!);
+              success = Boolean(text?.includes(step.value!));
               if (!success) error = `Text mismatch in ${step.selector}`;
               break;
             }

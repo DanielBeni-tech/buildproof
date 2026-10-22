@@ -1,7 +1,5 @@
-import { db, nowISO } from '../repository/index';
+import { nowISO } from '../repository/index';
 import { createRun, updateRunState, finalizeRun, createResult, createEvidence } from '../repository/runs';
-import { getScenarioVersion } from '../repository/scenarios';
-import type { RunState } from '../../domain/status';
 
 export interface ExecutionContext {
   runId: string;
@@ -24,14 +22,13 @@ export class ExecutionCoordinator {
     updateRunState(run.id, 'running');
 
     try {
-      // L'exécution réelle est déléguée à l'adaptateur browser
       const { runResult, evidence } = await this.executeSteps(context);
 
       const finishedAt = nowISO();
       const startedAt = run.startedAt || finishedAt;
       const durationMs = Date.parse(finishedAt) - Date.parse(startedAt);
 
-      const finalized = finalizeRun(run.id, runResult.state as RunState, finishedAt, durationMs);
+      const finalized = finalizeRun(run.id, runResult.state as 'blocked' | 'failed' | 'succeeded' | 'timeout', finishedAt, durationMs);
       if (!finalized) {
         throw new Error('Run could not be finalized (already finalized or not running)');
       }
@@ -40,8 +37,8 @@ export class ExecutionCoordinator {
         runId: run.id,
         status: runResult.status,
         summary: runResult.summary,
-        diagnosticCode: runResult.diagnosticCode,
-        executedSteps: runResult.executedSteps,
+        diagnosticCode: (runResult.diagnosticCode as 'selector' | 'navigation' | 'timeout' | 'crash' | 'unknown') ?? 'unknown',
+        executedSteps: runResult.executedSteps as any,
       });
 
       for (const ev of evidence) {
@@ -76,7 +73,6 @@ export class ExecutionCoordinator {
   }
 
   private async executeSteps(context: ExecutionContext) {
-    // Déléguer à l'adaptateur browser (import dynamique pour éviter les effets de bord au chargement)
     const { BrowserAdapter } = await import('./browser');
     const adapter = new BrowserAdapter();
     return adapter.run(context);
