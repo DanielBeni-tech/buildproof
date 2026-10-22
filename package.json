@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "server": "tsc && node dist/server/server.js",
+    "build": "tsc && vite build",
+    "test": "vitest run",
+    "preview": "vite preview"
   },
   "repository": {
     "type": "git",
